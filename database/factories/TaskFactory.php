@@ -7,6 +7,9 @@ use Faker\Generator as Faker;
 
 $factory->define(Task::class, function (Faker $faker) {
     return [
-        //
+        'tittle' => $faker->jobTitle,
+        'statement' => $faker->text(),
+        'start_at' => $faker->dateTime,
+        'end_at' => $faker->dateTime
     ];
 });
