@@ -19,4 +19,14 @@ class Module extends Model
     {
         return $this->belongsTo('users');
     }
+
+    /**
+     * En un módulo hay muchos estuduantes
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function students()
+    {
+        return $this->belongsToMany('App\User', 'students');
+    }
 }
