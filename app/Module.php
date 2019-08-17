@@ -29,4 +29,24 @@ class Module extends Model
     {
         return $this->belongsToMany('App\User', 'students');
     }
+
+    /**
+     * Un módulo posee muchos recursos
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\MorphToMany
+     */
+    public function resources()
+    {
+        return $this->morphedByMany('App\Resource', 'evaluation');
+    }
+
+    /**
+     * Un módulo posee muchas tareas
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\MorphToMany
+     */
+    public function tasks()
+    {
+        return $this->morphedByMany('App\Task', 'evaluation');
+    }
 }
