@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateEvaluationsTable extends Migration
+class CreateEvaluationTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,11 @@ class CreateEvaluationsTable extends Migration
      */
     public function up()
     {
-        Schema::create('evaluations', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->string('evaluation');
+        Schema::create('evaluation', function (Blueprint $table) {
             $table->unsignedBigInteger('module_id');
-            $table->timestamps();
+            $table->tinyInteger('evaluation');
+            $table->unsignedBigInteger('to_module_id');
+            $table->string('to_module_type');
 
             $table->foreign('module_id')->references('id')->on('modules');
         });
@@ -30,6 +30,6 @@ class CreateEvaluationsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('evaluations');
+        Schema::dropIfExists('evaluation');
     }
 }
