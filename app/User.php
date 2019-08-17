@@ -57,4 +57,14 @@ class User extends Authenticatable
     {
         return $this->belongsToMany('App\Module', 'students');
     }
+
+    /**
+     * Un profesor enseña un módulo
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function teach()
+    {
+        return $this->hasOne('App\Module', 'teacher_id');
+    }
 }
