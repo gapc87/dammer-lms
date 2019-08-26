@@ -22,7 +22,7 @@ class CreateEvaluatedTasksTable extends Migration
             $table->timestamps();
 
             $table->foreign('student_id')->references('id')->on('users');
-            $table->foreign('tasks_id')->references('id')->on('tasks');
+            $table->foreign('task_id')->references('id')->on('tasks');
         });
     }
 
