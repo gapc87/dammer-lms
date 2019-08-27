@@ -12,16 +12,18 @@
             </div>
 
             <button type="submit" class="btn btn-primary btn-block mb-3">Login</button>
-            <!--
+
             <div class="alert alert-danger" role="alert" v-if="getError">
                 <p>{{ getError }}</p>
             </div>
-            -->
+
         </form>
     </div>
 </template>
 
 <script>
+    import {mapActions, mapGetters} from "vuex";
+
     export default {
         name: "Login",
 
@@ -32,9 +34,28 @@
             };
         },
 
-        methods: {
-            login() {
+        computed: {
+            ...mapGetters(['getLoading', 'getError'])
+        },
 
+        methods: {
+            ...mapActions('user', {storeLogin: 'login'}),
+            login() {
+                this.$store.commit('SET_LOADING', true);
+                let data = {
+                    email: this.email,
+                    password: this.password
+                };
+
+                return this['storeLogin'](data)
+                    .then(() => {
+                        this.$store.commit('SET_ERROR', null);
+                        this.$router.push('/');
+                    })
+                    .catch(error => {
+                        this.$store.commit('SET_ERROR', error.data.message);
+                        this.$store.commit('SET_LOADING', false);
+                    });
             }
 
         }
