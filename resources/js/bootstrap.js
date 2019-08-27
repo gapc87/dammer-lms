@@ -1,3 +1,6 @@
+import Api from "./assets/api";
+import Auth from "./assets/auth";
+
 window._ = require('lodash');
 
 /**
@@ -20,6 +23,8 @@ try {
  */
 
 window.axios = require('axios');
+window.api = new Api();
+window.auth = new Auth();
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
