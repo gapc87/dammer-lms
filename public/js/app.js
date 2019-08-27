@@ -53867,6 +53867,127 @@ var app = new vue__WEBPACK_IMPORTED_MODULE_3___default.a({
 
 /***/ }),
 
+/***/ "./resources/js/assets/api.js":
+/*!************************************!*\
+  !*** ./resources/js/assets/api.js ***!
+  \************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var Api =
+/*#__PURE__*/
+function () {
+  function Api() {
+    _classCallCheck(this, Api);
+  }
+
+  _createClass(Api, [{
+    key: "call",
+    value: function call(requestType, url) {
+      var data = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
+      return new Promise(function (resolve, reject) {
+        axios[requestType](url, data).then(function (response) {
+          resolve(response);
+        })["catch"](function (_ref) {
+          var response = _ref.response;
+
+          if (response.status === 401) {
+            auth.logout();
+          }
+
+          reject(response);
+        });
+      });
+    }
+  }]);
+
+  return Api;
+}();
+
+/* harmony default export */ __webpack_exports__["default"] = (Api);
+
+/***/ }),
+
+/***/ "./resources/js/assets/auth.js":
+/*!*************************************!*\
+  !*** ./resources/js/assets/auth.js ***!
+  \*************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var Auth =
+/*#__PURE__*/
+function () {
+  function Auth() {
+    _classCallCheck(this, Auth);
+
+    var userData = window.localStorage.getItem('user');
+    this.user = userData ? JSON.parse(userData) : null;
+    this.token = window.localStorage.getItem('token');
+    this.setHeaders();
+  }
+
+  _createClass(Auth, [{
+    key: "login",
+    value: function login(user, token) {
+      window.localStorage.setItem('user', JSON.stringify(user));
+      window.localStorage.setItem('token', token);
+      this.token = token;
+      this.user = user;
+      this.setHeaders();
+    }
+  }, {
+    key: "check",
+    value: function check() {
+      return !!this.token;
+    }
+  }, {
+    key: "logout",
+    value: function logout() {
+      this.user = null;
+      this.token = null;
+      delete axios.defaults.headers.common["Authorization"];
+      window.localStorage.removeItem('user');
+      window.localStorage.removeItem('token');
+    }
+  }, {
+    key: "setHeaders",
+    value: function setHeaders() {
+      if (this.check()) {
+        axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.token; // Headers para Datatables
+
+        $.ajaxSetup({
+          headers: {
+            'Authorization': 'Bearer ' + this.token
+          }
+        });
+      }
+    }
+  }]);
+
+  return Auth;
+}();
+
+/* harmony default export */ __webpack_exports__["default"] = (Auth);
+
+/***/ }),
+
 /***/ "./resources/js/assets/routes.js":
 /*!***************************************!*\
   !*** ./resources/js/assets/routes.js ***!
@@ -53886,6 +54007,31 @@ var router = new vue_router__WEBPACK_IMPORTED_MODULE_0__["default"]({
   mode: 'history',
   routes: routes
 });
+router.beforeEach(function (to, from, next) {
+  if (to.matched.some(function (record) {
+    return record.meta.middlewareAuth;
+  })) {
+    if (!auth.check()) {
+      next({
+        path: '/login',
+        query: {
+          redirect: to.fullPath
+        }
+      });
+      return;
+    }
+  } else if (to.path === '/login' && auth.check()) {
+    next({
+      path: '/',
+      query: {
+        redirect: to.fullPath
+      }
+    });
+    return;
+  }
+
+  next();
+});
 /* harmony default export */ __webpack_exports__["default"] = (router);
 
 /***/ }),
@@ -53894,8 +54040,14 @@ var router = new vue_router__WEBPACK_IMPORTED_MODULE_0__["default"]({
 /*!***********************************!*\
   !*** ./resources/js/bootstrap.js ***!
   \***********************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _assets_api__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./assets/api */ "./resources/js/assets/api.js");
+/* harmony import */ var _assets_auth__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./assets/auth */ "./resources/js/assets/auth.js");
+
 
 window._ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
 /**
@@ -53918,6 +54070,8 @@ try {
 
 
 window.axios = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+window.api = new _assets_api__WEBPACK_IMPORTED_MODULE_0__["default"]();
+window.auth = new _assets_auth__WEBPACK_IMPORTED_MODULE_1__["default"]();
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 /**
  * Next we will register the CSRF Token as a common header with Axios so that
