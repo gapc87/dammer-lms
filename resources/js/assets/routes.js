@@ -5,6 +5,18 @@ let routes = [
         path: '/login',
         component: require('../components/pages/Login.vue').default,
     },
+    {
+        path: '',
+        component: require('../components/pages/dashboard/index.vue').default,
+        meta: { middlewareAuth: true },
+        children: [
+            {
+                name: 'home',
+                path: '/',
+                component: require('../components/pages/dashboard/home').default,
+            }
+        ]
+    }
 ];
 
 const router = new VueRouter({
