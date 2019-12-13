@@ -10,7 +10,7 @@
 
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 
-    <title>Laravel Passport</title>
+    <title>Dammer</title>
 </head>
 <body>
 <div id="app">
