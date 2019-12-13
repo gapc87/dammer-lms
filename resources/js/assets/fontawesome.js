@@ -3,7 +3,12 @@ import {
     faBell,
     faEnvelope,
     faCheckCircle,
-    faList
+    faList,
+    faChalkboardTeacher,
+    faPlusCircle,
+    faTrashAlt,
+    faUserEdit,
+    faEdit
 } from '@fortawesome/free-solid-svg-icons';
 
 
@@ -12,5 +17,10 @@ export default {
     faBell,
     faEnvelope,
     faCheckCircle,
-    faList
+    faList,
+    faChalkboardTeacher,
+    faPlusCircle,
+    faTrashAlt,
+    faUserEdit,
+    faEdit
 }

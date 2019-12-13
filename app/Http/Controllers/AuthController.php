@@ -21,22 +21,6 @@ class AuthController extends Controller
     }
 
     /**
-     * Registro de usuario
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function register()
-    {
-        User::create([
-            'name' => request('name'),
-            'email' => request('email'),
-            'password' => bcrypt(request('password'))
-        ]);
-
-        return response()->json(['status' => 201]);
-    }
-
-    /**
      * Iniciar sesión
      *
      * @return mixed
@@ -89,7 +73,7 @@ class AuthController extends Controller
     {
         $user = User::whereEmail(request('email'))->first();
 
-        return !(!$user || !Hash::check(request('password'), $user->password)) ? $user : false;
+        return !(!$user || !Hash::check(request('password'), $user->password)) ? $user->load('role') : false;
     }
 
     /**
@@ -98,7 +82,6 @@ class AuthController extends Controller
      */
     protected function accessToken($user)
     {
-        // Send an internal API request to get an access token
         $client = DB::table('oauth_clients')
             ->where('password_client', true)
             ->first();

@@ -3,8 +3,18 @@
 </template>
 
 <script>
+    import {mapActions} from "vuex";
+
     export default {
-        name: "Layout"
+        name: "Layout",
+
+        created() {
+            this['setStateUserFromLocalStorage']();
+        },
+
+        methods: {
+            ...mapActions('user', ['setStateUserFromLocalStorage'])
+        }
     }
 </script>
 

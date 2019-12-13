@@ -17,7 +17,7 @@ class Module extends Model
      */
     public function teacher()
     {
-        return $this->belongsTo('users');
+        return $this->belongsTo('App\User');
     }
 
     /**
@@ -37,7 +37,7 @@ class Module extends Model
      */
     public function resources()
     {
-        return $this->morphedByMany('App\Resource', 'evaluation');
+        return $this->morphedByMany('App\Resource', 'evaluation')->withPivot('evaluation');
     }
 
     /**
@@ -47,6 +47,6 @@ class Module extends Model
      */
     public function tasks()
     {
-        return $this->morphedByMany('App\Task', 'evaluation');
+        return $this->morphedByMany('App\Task', 'evaluation')->withPivot('evaluation');
     }
 }

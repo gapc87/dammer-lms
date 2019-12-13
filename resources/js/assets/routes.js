@@ -14,6 +14,31 @@ let routes = [
                 name: 'home',
                 path: '/',
                 component: require('../components/pages/dashboard/home').default,
+                meta: { middlewareAuth: true }
+            },
+            {
+                name: 'module',
+                path: '/module/:module',
+                component: require('../components/pages/dashboard/module').default,
+                meta: { middlewareAuth: true }
+            },
+            {
+                name: 'tasks',
+                path: '/module/:module/task/:task',
+                component: require('../components/pages/dashboard/task').default,
+                meta: { middlewareAuth: true }
+            },
+            {
+                name: 'users',
+                path: '/admin/users',
+                component: require('../components/pages/dashboard/admin/Users').default,
+                meta: { middlewareAuth: true }
+            },
+            {
+                name: 'modules',
+                path: '/admin/modules',
+                component: require('../components/pages/dashboard/admin/Modules').default,
+                meta: { middlewareAuth: true }
             }
         ]
     }

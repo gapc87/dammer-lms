@@ -3,10 +3,16 @@ export const SET_ERROR = 'SET_ERROR';
 export const SET_HAS_ERROR = 'SET_HAS_ERROR';
 
 import user from './modules/user';
+import home from './modules/home';
+import module from './modules/module';
+import adminUsers from "./modules/adminUsers";
 
 export default {
     modules: {
-        user
+        user,
+        home,
+        module,
+        adminUsers
     },
 
     state: {

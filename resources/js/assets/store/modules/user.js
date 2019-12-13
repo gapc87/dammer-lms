@@ -5,6 +5,7 @@ export default {
 
     state: {
         user: {},
+        role: null,
         token: null,
         authenticated: false
     },
@@ -13,12 +14,14 @@ export default {
         getUser: state => state.user,
         getToken: state => state.token,
         getAuthenticated: state => state.authenticated,
-        role: state => role => state.authenticated && state.user.role_id
+        role: state => state.role,
+        hasRole: state => role => state.role === role
     },
 
     mutations: {
         [SET_ALL_USER_DATA]: (state, payload) => {
             state.user = payload.user;
+            state.role = payload.role;
             state.token = payload.token;
             state.authenticated = payload.authenticated;
         }
@@ -28,6 +31,7 @@ export default {
         setStateUserFromLocalStorage: (context) => {
             context.commit(SET_ALL_USER_DATA, {
                 user: auth.user,
+                role: auth.user.role.name,
                 token: auth.token,
                 authenticated: auth.check(),
             });
@@ -37,6 +41,7 @@ export default {
                 .then(response => {
                     context.commit(SET_ALL_USER_DATA, {
                         user: response.data.user,
+                        role: response.data.user.role.name,
                         token: response.data.token,
                         authenticated: true,
                     });
@@ -49,6 +54,7 @@ export default {
                 .then(() => {
                     context.commit(SET_ALL_USER_DATA, {
                         user: {},
+                        role: null,
                         token: null,
                         authenticated: false
                     });

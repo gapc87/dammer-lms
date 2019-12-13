@@ -15,13 +15,14 @@ class CreateEvaluatedTasksTable extends Migration
     {
         Schema::create('evaluated_tasks', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->tinyInteger('score');
+            $table->uuid('uuid')->nullable();
+            $table->tinyInteger('score')->nullable();
             $table->string('upload');
             $table->unsignedBigInteger('student_id');
             $table->unsignedBigInteger('task_id');
             $table->timestamps();
 
-            $table->foreign('student_id')->references('id')->on('users');
+            $table->foreign('student_id')->references('user_id')->on('students');
             $table->foreign('task_id')->references('id')->on('tasks');
         });
     }
