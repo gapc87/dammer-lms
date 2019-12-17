@@ -1,14 +1,16 @@
 <template>
-    <form class="form-inline" @submit.prevent="evaluate" v-if="final_score === null">
+    <form class="form-inline" @submit.prevent="evaluate" v-if="student_score === null">
         <div class="d-block mx-auto">
-            <label class="sr-only" for="evaluate">Name</label>
             <input type="text" size="3" class="form-control" id="evaluate" v-model="score" placeholder="Nota">
 
             <button type="submit" class="btn btn-primary">Evaluar</button>
         </div>
     </form>
     <span v-else>
-        {{final_score}}
+        {{student_score}}
+        <a href="#!" @click="remove()">
+            <font-awesome-icon icon="edit" size="lg" />
+        </a>
     </span>
 </template>
 
@@ -18,15 +20,13 @@
 
         data() {
             return {
-                score: null,
-                final_score: null
+                score: null
             }
         },
 
-        props: {
-            student_id: Number,
-            task_id: Number
-        },
+        props: [
+            'array_key', 'student_id', 'task_id', 'student_score'
+        ],
 
         methods: {
             evaluate() {
@@ -40,13 +40,16 @@
                     + '/' + this.$route.params.module
                     + '/' + this.task_id
                     + '/evaluate', score)
-                    .then((response) => this.setScore(response.data.data.score))
-                    .catch((error) => console.log(error))
-                    .finally();
+                    .then((response) => {
+                        if (this.score !== null) {
+                            this.$emit("update-score", [this.array_key, this.score]);
+                        }
+                    })
+                    .catch((error) => console.log(error));
             },
 
-            setScore(score) {
-                this.final_score = score;
+            remove() {
+                this.$emit('remove');
             }
         }
     }

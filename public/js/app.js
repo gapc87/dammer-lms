@@ -12375,18 +12375,16 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "EvaluateTask",
   data: function data() {
     return {
-      score: null,
-      final_score: null
+      score: null
     };
   },
-  props: {
-    student_id: Number,
-    task_id: Number
-  },
+  props: ['array_key', 'student_id', 'task_id', 'student_score'],
   methods: {
     evaluate: function evaluate() {
       var _this = this;
@@ -12395,13 +12393,15 @@ __webpack_require__.r(__webpack_exports__);
         'score': this.score
       };
       api.call('post', '/api/modules/' + this.student_id + '/' + this.$route.params.module + '/' + this.task_id + '/evaluate', score).then(function (response) {
-        return _this.setScore(response.data.data.score);
+        if (_this.score !== null) {
+          _this.$emit("update-score", [_this.array_key, _this.score]);
+        }
       })["catch"](function (error) {
         return console.log(error);
-      })["finally"]();
+      });
     },
-    setScore: function setScore(score) {
-      this.final_score = score;
+    remove: function remove() {
+      this.$emit('remove');
     }
   }
 });
@@ -13051,7 +13051,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
-//
 
 
 
@@ -13072,7 +13071,8 @@ var FileDownload = __webpack_require__(/*! js-file-download */ "./node_modules/j
     this.fetchTask();
   },
   methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])('module', {
-    taskStore: 'task'
+    taskStore: 'task',
+    setScore: 'setScore'
   }), {
     fetchTask: function fetchTask() {
       var _this = this;
@@ -13118,16 +13118,6 @@ var FileDownload = __webpack_require__(/*! js-file-download */ "./node_modules/j
         responseType: 'arraybuffer'
       }).then(function (response) {
         FileDownload(response.data, file);
-      })["catch"](function (e) {
-        return console.log('FAILURE!!', e);
-      });
-    },
-    evaluate: function evaluate(student_id) {
-      var score = {
-        'score': this.score
-      };
-      axios.post('/api/modules/' + student_id + '/' + this.$route.params.module + '/' + this.task.task.id + '/evaluate', score, {}).then(function (response) {
-        console.log(response);
       })["catch"](function (e) {
         return console.log('FAILURE!!', e);
       });
@@ -50684,7 +50674,7 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm.final_score === null
+  return _vm.student_score === null
     ? _c(
         "form",
         {
@@ -50698,12 +50688,6 @@ var render = function() {
         },
         [
           _c("div", { staticClass: "d-block mx-auto" }, [
-            _c(
-              "label",
-              { staticClass: "sr-only", attrs: { for: "evaluate" } },
-              [_vm._v("Name")]
-            ),
-            _vm._v(" "),
             _c("input", {
               directives: [
                 {
@@ -50739,7 +50723,22 @@ var render = function() {
           ])
         ]
       )
-    : _c("span", [_vm._v("\n    " + _vm._s(_vm.final_score) + "\n")])
+    : _c("span", [
+        _vm._v("\n    " + _vm._s(_vm.student_score) + "\n    "),
+        _c(
+          "a",
+          {
+            attrs: { href: "#!" },
+            on: {
+              click: function($event) {
+                return _vm.remove()
+              }
+            }
+          },
+          [_c("font-awesome-icon", { attrs: { icon: "edit", size: "lg" } })],
+          1
+        )
+      ])
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -51895,26 +51894,22 @@ var render = function() {
                           ? _c(
                               "td",
                               [
-                                student.evaluated_task.score === null
-                                  ? [
-                                      _c("evaluate-task", {
-                                        attrs: {
-                                          student_id: student.id,
-                                          task_id: _vm.task.task.id
-                                        }
-                                      })
-                                    ]
-                                  : student.evaluated_task.score !== null
-                                  ? [
-                                      _vm._v(
-                                        "\n                            " +
-                                          _vm._s(student.evaluated_task.score) +
-                                          "\n                        "
-                                      )
-                                    ]
-                                  : _vm._e()
+                                _c("evaluate-task", {
+                                  attrs: {
+                                    array_key: key,
+                                    student_id: student.id,
+                                    task_id: _vm.task.task.id,
+                                    student_score: student.evaluated_task.score
+                                  },
+                                  on: {
+                                    remove: function($event) {
+                                      student.evaluated_task.score = null
+                                    },
+                                    "update-score": _vm.setScore
+                                  }
+                                })
                               ],
-                              2
+                              1
                             )
                           : _c("td", [
                               _vm._v(
@@ -68495,19 +68490,21 @@ var SET_MODULES = 'SET_MODULES';
 /*!*****************************************************!*\
   !*** ./resources/js/assets/store/modules/module.js ***!
   \*****************************************************/
-/*! exports provided: SET_MODULE, SET_TASK, default */
+/*! exports provided: SET_MODULE, SET_TASK, SET_SCORE, default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SET_MODULE", function() { return SET_MODULE; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SET_TASK", function() { return SET_TASK; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SET_SCORE", function() { return SET_SCORE; });
 var _mutations;
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 var SET_MODULE = 'SET_MODULE';
 var SET_TASK = 'SET_TASK';
+var SET_SCORE = 'SET_SCORE';
 /* harmony default export */ __webpack_exports__["default"] = ({
   namespaced: true,
   state: {
@@ -68533,6 +68530,8 @@ var SET_TASK = 'SET_TASK';
     state.evaluations = payload.data.evaluations;
   }), _defineProperty(_mutations, SET_TASK, function (state, payload) {
     state.task = payload.data;
+  }), _defineProperty(_mutations, SET_SCORE, function (state, payload) {
+    state.task.students[payload[0]].evaluated_task.score = payload[1];
   }), _mutations),
   actions: {
     module: function module(context, data) {
@@ -68540,6 +68539,9 @@ var SET_TASK = 'SET_TASK';
     },
     task: function task(context, data) {
       context.commit(SET_TASK, data);
+    },
+    setScore: function setScore(context, data) {
+      context.commit(SET_SCORE, data);
     }
   }
 });

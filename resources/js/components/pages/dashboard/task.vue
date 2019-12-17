@@ -16,7 +16,6 @@
                 Tarea
             </div>
             <div class="card-body" v-if="user.id === task.teacher.id">
-
                 <table class="table table-striped">
                     <thead>
                     <tr>
@@ -43,14 +42,14 @@
                             Sin entregar
                         </td>
                         <td v-if="!!student.evaluated_task">
-
-                            <template v-if="student.evaluated_task.score === null">
-                                <evaluate-task :student_id="student.id" :task_id="task.task.id" />
-                            </template>
-                            <template v-else-if="student.evaluated_task.score !== null">
-                                {{ student.evaluated_task.score }}
-                            </template>
-
+                            <evaluate-task
+                                @remove="student.evaluated_task.score = null"
+                                @update-score="setScore"
+                                :array_key="key"
+                                :student_id="student.id"
+                                :task_id="task.task.id"
+                                :student_score="student.evaluated_task.score"
+                            />
                         </td>
                         <td v-else>
                             Tarea sin evaluar
@@ -119,7 +118,7 @@
         },
 
         methods: {
-            ...mapActions('module', {taskStore: 'task'}),
+            ...mapActions('module', {taskStore: 'task', setScore: 'setScore'}),
 
             fetchTask() {
                 this.$store.commit('SET_LOADING', true);
@@ -174,23 +173,6 @@
                     FileDownload(response.data, file);
                 })
                     .catch((e) => console.log('FAILURE!!', e));
-            },
-
-            evaluate(student_id) {
-
-                const score = {
-                    'score': this.score
-                };
-
-                axios.post('/api/modules/'
-                    + student_id
-                    + '/' + this.$route.params.module
-                    + '/' + this.task.task.id
-                    + '/evaluate', score, {
-                }).then((response) => {
-                    console.log(response)
-                })
-                .catch((e) => console.log('FAILURE!!', e));
             }
         },
 

@@ -1,5 +1,6 @@
 export const SET_MODULE = 'SET_MODULE';
 export const SET_TASK = 'SET_TASK';
+export const SET_SCORE = 'SET_SCORE';
 
 export default {
     namespaced: true,
@@ -26,6 +27,10 @@ export default {
 
         [SET_TASK]: (state, payload) => {
             state.task = payload.data;
+        },
+
+        [SET_SCORE]: (state, payload) => {
+            state.task.students[payload[0]].evaluated_task.score = payload[1];
         }
     },
 
@@ -37,5 +42,9 @@ export default {
         task: (context, data) => {
             context.commit(SET_TASK, data);
         },
+
+        setScore: (context, data) => {
+            context.commit(SET_SCORE, data);
+        }
     }
 }
