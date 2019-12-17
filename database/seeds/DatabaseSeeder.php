@@ -29,8 +29,8 @@ class DatabaseSeeder extends Seeder
         ]);
 
         factory(App\User::class)->create([
-            'name' => 'Gabriel',
-            'email' => 'gapaceon@gmail.com',
+            'name' => 'Administrador',
+            'email' => 'admin@dammer-lms.test',
             'role_id' => \App\Role::ADMIN
         ]);
 
