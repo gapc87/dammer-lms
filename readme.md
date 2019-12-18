@@ -8,8 +8,8 @@
 - `cp .env.example .env`
 - Crear la base de datos y configurarla en `.env`
 - `php artisan key:generate`
-- `php artisan passport:install --force`
 - `php artisan migrate --seed`
+- `php artisan passport:install --force`
 - `php artisan serve`
 
 
